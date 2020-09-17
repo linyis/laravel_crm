@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use App\Rules\Captcha;
 
 class RegisterController extends Controller
 {
@@ -50,9 +52,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-//            'name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-//               'email' => 'string|nullable|email|max:255|unique:users',
+            'g-captcha-response' => new Captcha(),
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
