@@ -2,7 +2,8 @@
 
 - 本專案是 CRM 專案
 - 已實作 php artisan user:create {email} {passwd:optional} {name:optional}
- 
+- 已實作 Test data seed, Account: test@test.com / 111111
+- 已實作 Test data seed, Data : test 帳號會有十筆資料 (app.php 已設定為中文測試資料)
 ## 基本要求
 
 - 請使 Eloquent ORM

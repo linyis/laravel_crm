@@ -1,6 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\User;
+use App\Crm;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +20,15 @@ $factory->define(App\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'password' => Hash::make('111111'), // secret
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Crm::class, function (Faker $faker) {
+    return [
+        'user_id' => User::all()->random()->id,
+        'subject' => $faker->title(10),
+        'content' => $faker->realText(50)
     ];
 });
