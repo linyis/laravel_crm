@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Crm;
 
 class HomeController extends Controller
 {
@@ -14,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+//        $this->middleware('auth');
     }
 
     /**
@@ -22,10 +23,23 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return view('home')->with(['users'=> $users]);
+        //$crms = Crm::simplePaginate(15);
+        if (request("search")) {
+            $crms = Crm::where('subject','like',$request['search'])->paginate(10);
+        } else {
+            $crms = Crm::paginate(10);
+        }
 
+
+        return view('home')->with(
+            ['crms'=>$crms]
+        );
+    }
+    public function detail(Crm $crm) {
+        return view('crms.detail')->with(
+            ['crm'=>$crm]
+        );
     }
 }
