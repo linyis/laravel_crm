@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use \ReCaptcha\ReCaptcha;
+use ReCaptcha\ReCaptcha;
 
 class Captcha implements Rule
 {
@@ -26,9 +26,9 @@ class Captcha implements Rule
      */
     public function passes($attribute, $value)
     {
-        $recaptcha = new \ReCaptcha\ReCaptcha(env('CAPTCHA_SECRET'));
+        $recaptcha = new ReCaptcha(env('CAPTCHA_SECRET'));
 
-        $rseponse = $recaptcha->verify($value, $_SERVER['REMOTE_ADDR']);
+        $response = $recaptcha->verify($value, $_SERVER['REMOTE_ADDR']);
         return $response->isSuccess();
     }
 
@@ -39,6 +39,6 @@ class Captcha implements Rule
      */
     public function message()
     {
-        return 'Please Complete the ReCaptcha to submit the form';
+        return 'Please Complete the ReCaptcha to submit the form!';
     }
 }

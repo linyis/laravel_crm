@@ -65,9 +65,10 @@
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <div id="g-recaptcha"></div>
+
                                 @if ($errors->has('g-recaptcha-response'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('g-captcha-response') }}</strong>
+                                <span role="alert">
+                                    <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
                                 </span>
                                 @endif
                             </div>
