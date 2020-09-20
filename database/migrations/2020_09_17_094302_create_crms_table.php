@@ -17,7 +17,7 @@ class CreateCrmsTable extends Migration
         Schema::create('crms', function (Blueprint $table) {
             $table->increments('id');
             $table->string("subject");
-            $table->integer("count");
+            $table->integer("count")->default(0);
             $table->index("subject");
             $table->text("content");
             $table->unsignedInteger("user_id");

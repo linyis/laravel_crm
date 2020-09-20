@@ -23,3 +23,5 @@ Auth::routes();
 Route::get('/home/{crm}/detail','HomeController@detail');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('crm', 'CrmController');

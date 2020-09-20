@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Crm;
+use App\Jobs\BrowserCount;
+use App\Jobs\BrowserLog;
+use App\Log;
 
 class HomeController extends Controller
 {
@@ -38,6 +41,10 @@ class HomeController extends Controller
         );
     }
     public function detail(Crm $crm) {
+
+        // $this->dispatch(new BrowserCount($crm));
+        // $this->dispatch(new BrowserLog());
+
         return view('crms.detail')->with(
             ['crm'=>$crm]
         );
