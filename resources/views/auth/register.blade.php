@@ -84,6 +84,9 @@
                         </div>
                     </form>
                 </div>
+                <div class="card-body">
+                    @include("social.login")
+                </div>
             </div>
         </div>
     </div>

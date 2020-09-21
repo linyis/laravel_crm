@@ -25,3 +25,11 @@ Route::get('/home/{crm}/detail','HomeController@detail');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
+
+Route::get('/line', 'LineLoginController@page');
+Route::get('/line/callback', 'LineLoginController@LoginCallBack');
+
+Route::get('/google', 'GoogleLoginController@page');
+Route::get('/google/callback', 'GoogleLoginController@LoginCallBack');
+Route::get('/google/sendcode', 'GoogleLoginController@sendcode');
+

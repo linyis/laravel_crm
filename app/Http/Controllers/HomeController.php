@@ -8,6 +8,7 @@ use App\Crm;
 use App\Jobs\BrowserCount;
 use App\Jobs\BrowserLog;
 use App\Log;
+use App\SocialLogin\Line;
 
 class HomeController extends Controller
 {
@@ -28,6 +29,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
         //$crms = Crm::simplePaginate(15);
         if (request("search")) {
             $crms = Crm::where('subject','like',$request['search'])->paginate(10);
