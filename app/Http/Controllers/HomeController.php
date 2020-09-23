@@ -29,14 +29,16 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->check()) {
+            return redirect(route("crm.index"));
+        }
 
         //$crms = Crm::simplePaginate(15);
         if (request("search")) {
-            $crms = Crm::where('subject','like',$request['search'])->paginate(10);
+            $crms = Crm::where('subject','like','%'.$request['search'].'%')->paginate(10);
         } else {
             $crms = Crm::paginate(10);
         }
-
 
         return view('home')->with(
             ['crms'=>$crms]
@@ -44,11 +46,14 @@ class HomeController extends Controller
     }
     public function detail(Crm $crm) {
 
-        // $this->dispatch(new BrowserCount($crm));
-        // $this->dispatch(new BrowserLog());
+        $this->dispatch(new BrowserCount($crm));
+        $this->dispatch(new BrowserLog());
 
         return view('crms.detail')->with(
-            ['crm'=>$crm]
+            [
+                'crm'=>$crm ,
+                'back'=>"home"
+            ]
         );
     }
 }

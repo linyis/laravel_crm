@@ -10,16 +10,16 @@ use GuzzleHttp\Client;
 
 class LineLoginController extends Controller
 {
-    protected $lineService;
+    protected $service;
 
-    public function __construct(Line $lineService)
+    public function __construct(Line $service)
     {
-        $this->lineService = $lineService;
+        $this->service = $service;
     }
 
     public function page()
     {
-        $url = $this->lineService->getLoginBaseUrl();
+        $url = $this->service->getLoginBaseUrl();
         return redirect($url);
     }
 
@@ -34,9 +34,9 @@ class LineLoginController extends Controller
 
             $code = $request->input('code', '');
 
-            $response = $this->lineService->getLineToken($code);
-            
-            $user_profile = $this->lineService->getUserProfile($response['access_token']);
+            $response = $this->service->getLineToken($code);
+
+            $user_profile = $this->service->getUserProfile($response['access_token']);
 
             echo "<pre>"; print_r($user_profile); echo "</pre>";
         } catch (Exception $ex) {

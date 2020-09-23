@@ -20,6 +20,7 @@ class CreateCrmsTable extends Migration
             $table->integer("count")->default(0);
             $table->index("subject");
             $table->text("content");
+            $table->string("image")->nullable();
             $table->unsignedInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

@@ -51,12 +51,6 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        // return Validator::make($data, [
-        //     'name' => 'required|string|max:255',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'g-captcha-response' => new Captcha(),
-        //     'password' => 'required|string|min:6|confirmed',
-        // ]);
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -85,7 +79,6 @@ class RegisterController extends Controller
 
         //  $data['test'] = $response->isSuccess();
 
-        return dd($data);
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

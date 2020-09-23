@@ -13,7 +13,9 @@ class BrowserCount implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 3;
     protected $crm;
+
     /**
      * Create a new job instance.
      *
@@ -22,6 +24,7 @@ class BrowserCount implements ShouldQueue
     public function __construct(Crm $crm)
     {
         $this->crm = $crm;
+        $this->queue = 'default';
     }
 
     /**
@@ -31,12 +34,12 @@ class BrowserCount implements ShouldQueue
      */
     public function handle()
     {
-        Redis::throttle('Count_increasment')->allow(2)->every(1)->then(function () {
+//        Redis::throttle('Count_increasment')->allow(2)->every(1)->then(function () {
             $this->crm->count = $this->crm->count + 1;
             $this->crm->save();
-        } , function () {
-            // Could not obtain lock; this job will be re-queued
-            return $this->release(2);
-        });
+        // } , function () {
+        //     // Could not obtain lock; this job will be re-queued
+        //     return $this->release(2);
+        // });
     }
 }

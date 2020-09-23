@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 class Crm extends Model
 {
     protected $fillable = [
-        'subject', 'content', 'user_id',
+        'subject', 'content', 'user_id', 'image', 'count'
     ];
 
     public function user()

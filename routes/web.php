@@ -14,18 +14,20 @@
 Route::get('/', function () {
     return redirect()->route('home');
 });
-//Route::get('/', 'HomeController@index');
-// Route::get('/',function (){
-//     return view("home");
-// });
+
 Auth::routes();
 
-Route::get('/home/{crm}/detail','HomeController@detail');
+Route::get('/home/{crm}/detail','HomeController@detail')->name('home.detail');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
+Route::get('/test', function()
+{
 
+    //return Storage::download('storage\1600759888.jpg');
+    //echo public_path('images\1600759888.jpg');
+});
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');
 
