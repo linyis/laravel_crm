@@ -28,6 +28,7 @@ Route::get('/home/{crm}/detail','HomeController@detail')->name('home.detail');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
+Route::resource('order', 'OrderController');
 Route::get('/page', function()
 {
     return view('test');
