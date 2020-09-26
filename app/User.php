@@ -31,5 +31,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Crm::class);
     }
-
+    public function social(){
+        return $this->hasOne(SocialUser::class,'user_id','id');
+    }
 }

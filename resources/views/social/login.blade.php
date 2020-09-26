@@ -5,9 +5,9 @@
     <table class="table table-bordered text-white">
         <tr class="bg-dark">
             <td>
-                <button class="_35rr5y _32qX4k _3Bn0WQ WEKQ8O _1lANZ5">
+            <a href="/facebook">
                     <div class="_3JJsrr _1trMER">Facebook</div>
-                </button>
+                </a>
             </td>
             <td>
                 <a href="/google">

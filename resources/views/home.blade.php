@@ -19,6 +19,7 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">發文人</th>
+                <th scope="col">類別</th>
                 <th scope="col">主題</th>
                 <th scope="col">發文日期</th>
                 <th scope="col">瀏覽次數</th>
@@ -29,6 +30,11 @@
               <tr>
                 <th scope="row">{{((request('page')>0 ? request('page') : 1)-1)*10+$loop->index+1}}</th>
                 <td>{{$crm->user->name}}</td>
+                <td>
+                    @foreach ($crm->categories as $category)
+                    < {{renderParent($category)}} >
+                    @endforeach
+                </td>
               <td><a href="{{route('home.detail',$crm->id)}}">{{$crm->subject}}</a></td>
                 <td>{{$crm->created_at}}</td>
                 <td>{{$crm->count}}</td>
@@ -40,3 +46,4 @@
     </div>
 </div>
 @endsection
+

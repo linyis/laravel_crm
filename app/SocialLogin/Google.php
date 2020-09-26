@@ -2,9 +2,11 @@
 
 namespace App\SocialLogin;
 
+use App\SocialKey;
+use Illuminate\Support\Facades\DB;
 use Google_Client;
 
-class Google
+class Google implements Oauth
 {
 
     public function getLoginBaseUrl()
@@ -12,19 +14,19 @@ class Google
         $client = new \Google_Client;
         // 代入從 API console 下載下來的 client_secret
         $client->setAuthConfig('..\App\SocialLogin\client_google.json');
-        
+
         // 加入需要的權限（Google Drive API）
         // 也可以使用 url，例如：https://www.googleapis.com/auth/drive.metadata.readonly
         $client->addScope(['profile', \Google_Service_Drive::DRIVE_METADATA_READONLY]);
-        
+
         // 設定 redirect URI，登入認證完成會導回此頁
         $client->setRedirectUri('http://localhost:8000/google/callback');
-        
+
         // 不需要透過使用者介面就可以 refresh token
         $client->setAccessType('offline');
         // 支援 Incremental Authorization 漸進式擴大授權範圍
         $client->setIncludeGrantedScopes(true);
-        
+
         // 產生登入用的 URL
         $authUrl = $client->createAuthUrl();
         // 導至登入認證畫面
@@ -37,7 +39,7 @@ class Google
         $client->setAuthConfig('..\App\SocialLogin\client_google.json');
         $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST'] . '/google/sendcode');
         $client->addScope(\Google_Service_Drive::DRIVE_METADATA_READONLY);
-        
+
         if (! isset($_GET['code'])) {
           $auth_url = $client->createAuthUrl();
           return filter_var($auth_url, FILTER_SANITIZE_URL);
@@ -53,7 +55,7 @@ class Google
     public function getAccess()
     {
 
-    
+
     }
 
     public function getUserProfile($token)
@@ -83,7 +85,7 @@ class Google
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $output = curl_exec($ch);
         curl_close($ch);
-        
+
         return json_decode($output);
 
     }

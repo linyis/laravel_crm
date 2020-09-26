@@ -126,9 +126,14 @@ class CrmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Crm $crm)
     {
-        //
+        return view('crms.edit')->with(
+            [
+                'crm' => $crm,
+                'back'=>"crm.index"
+            ]
+        );
     }
 
     /**
@@ -138,9 +143,13 @@ class CrmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Crm $crm)
     {
-        //
+        $crm->subject=$request->subject;
+        $crm->content=$request->content;
+        $crm->save();
+        $msg = "完成";
+        return response()->json(array('msg'=> $msg));
     }
 
     /**
@@ -155,3 +164,14 @@ class CrmController extends Controller
         return redirect("crm")->with('message',"Delete Done!");
     }
 }
+
+function renderParent($node) {
+
+    echo "<b>{$node->name}</b>";
+    if ($node->parent) {
+       echo "<<<";
+       renderParent($node->parent);
+    }
+
+}
+

@@ -40,6 +40,7 @@
               <tr>
                 <th scope="row">{{((request('page')>0 ? request('page') : 1)-1)*10+$loop->index+1}}</th>
                 <td>{{$crm->user->name}}</td>
+
               <td><a href="{{route('crm.show',$crm->id)}}">{{$crm->subject}}</a></td>
                 <td>{{$crm->created_at}}</td>
                 <td>{{$crm->count}}</td>

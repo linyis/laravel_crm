@@ -1,9 +1,20 @@
 ## About 本專案
 
 - 本專案是 CRM 專案
+- 前台 List 有實作 search 文字
 - 已實作 php artisan user:create {email} {passwd:optional} {name:optional}
 - 已實作 Test data seed, Account: test@test.com / 111111
 - 已實作 Test data seed, Data : test 帳號會有十筆資料 (app.php 已設定為中文測試資料)
+- 已實作 Register 中的第三方登錄 LINE 登錄, 其它 Google Facebook 待補
+- Line 登入後, 會記錄社群登入資料到 SocialUser 並且在 Users 建立資料做相關連結
+- 後台 Create New 可以上傳圖片, 並且縮圖到寬度 2048 以下
+- 後台 Edit 直接使用 Ajax 傳送想修改的資料
+- 後台 Delete 是使用 web route 傳送 id 處理後再 redirect 回 list
+- 後台有實作 baum/baum on category model, 已自動建立五筆類別資料在 seed
+- 資料隨機綁定不同的 category, 也有可能沒有
+- 後台有顯示階層, web.php 有個遞迴, 用來給後台顯示類別階層的
+- 瀏覽記錄及 IP 記錄有實作 Queue Job 機制
+ 
 ## 基本要求
 
 - 請使 Eloquent ORM

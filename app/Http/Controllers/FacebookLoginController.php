@@ -2,39 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\SocialLogin\Google;
+use Illuminate\Support\Facades\DB;
+use App\SocialLogin\Facebook;
 use App\SocialLogin\OauthFactory;
 
-use Google_client;
 
-class GoogleLoginController extends Controller
+class FacebookLoginController extends Controller
 {
     protected $service;
 
     public function __construct()
     {
-        $this->service = new OauthFactory(new Google());
+         $this->service = new OauthFactory(new Facebook());
     }
 
     public function page()
     {
+
         $url = $this->service->getLoginBaseUrl();
         return redirect($url);
-    }
-
-    public function sendcode(Request $request)
-    {
-        try {
-//        $user_profile = $this->lineService->getUserProfile($response['access_token']);
-
-//        echo "<pre>"; print_r($user_profile); echo "</pre>";
-        } catch (Exception $ex) {
-
-            echo $ex->getMessage();
-            Log::error($ex);
-        }
     }
 
     public function LoginCallBack(Request $request)
@@ -48,9 +37,11 @@ class GoogleLoginController extends Controller
 
             $code = $request->input('code', '');
 
-            $url = $this->service->getToken($code);
-            echo $url;
-//            redirect($url);
+            $response = $this->service->getLineToken($code);
+
+            $user_profile = $this->service->getUserProfile($response['access_token']);
+
+            echo "<pre>"; print_r($user_profile); echo "</pre>";
         } catch (Exception $ex) {
 
             echo $ex->getMessage();

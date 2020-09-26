@@ -32,3 +32,21 @@ $factory->define(App\Crm::class, function (Faker $faker) {
         'content' => $faker->realText(50)
     ];
 });
+
+
+// $factory->define(App\Category::class, function (Faker $faker) {
+//     return [
+//         ['name' => 'China',
+//             'children' => [
+//                 ['name' => 'Zhejiang',
+//                     'children' => [
+//                         ['name' => 'Ningbo'],
+//                         ['name' => 'Huzhou']
+//                     ]],
+//                 ['name' => 'Jiangsu']
+//             ]],
+//     ];
+// });
+
+
+
