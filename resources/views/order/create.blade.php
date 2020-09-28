@@ -13,22 +13,51 @@
                 @csrf
 
                 <div class="form-group row">
-                    <label for="subject" class="col-sm-4 col-form-label text-md-right">XXXX</label>
+                    <label for="email" class="col-sm-4 col-form-label text-md-right">Email</label>
 
                     <div class="col-md-6">
-                        <input id="subject" type="subject" class="form-control{{ $errors->has('subject') ? ' is-invalid' : '' }}" name="subject" value="{{ old('subject') }}" required autofocus>
+                        <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="" required autofocus>
 
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="content" class="col-md-4 col-form-label text-md-right">XXXX</label>
+                    <label for="mobile" class="col-md-4 col-form-label text-md-right">手機</label>
 
                     <div class="col-md-6">
-                        <textarea id="content" type="password" class="form-control{{ $errors->has('content') ? ' is-invalid' : '' }}" name="content" required></textarea>
+                        <input id="mobile" type="text" class="form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="" required>
 
                     </div>
                 </div>
+                <hr />
+                @foreach ($goods as $good)
+                <div class="form-group row">
+                    <label for="mobile" class="col-md-2 col-form-label text-md-right">商品 {{$loop->index+1}}</label>
+
+                    <div class="col-md-4 col-form-label text-md-right">
+                    <input type="text" name="name[]" value="{{ $good->name }}" READONLY >
+                    </div>
+
+                    <div class="col-md-2 col-form-label text-md-right">
+                        <input type="text" name="quanity[]" value="1" READONLY >
+                    </div>
+
+                    <div class="col-md-4 col-form-label text-md-right">
+                        <input type="text" name="price[]" value="{{ $good->price }}" READONLY>
+                    </div>
+                </div>
+                @endforeach
+
+                <div class="form-group row">
+                    <label for="mobile" class="col-md-4 col-form-label text-md-right">總價</label>
+
+                    <div class="col-md-6">
+                        <input id="total_price" type="text" class="form-control{{ $errors->has('total_price') ? ' is-invalid' : '' }}" name="total_price" value="{{ $goods->sum('price') }}" READONLY >
+
+                    </div>
+                </div>
+
+                <hr />
 
                 <div class="form-group row mb-0">
                     <div class="col-md-8 offset-md-4">

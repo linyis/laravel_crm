@@ -10,6 +10,7 @@ use App\Jobs\BrowserLog;
 use App\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Common\ResizeImage;
+use App\Orders\Goods;
 
 class OrderController extends Controller
 {
@@ -32,8 +33,11 @@ class OrderController extends Controller
      */
     public function create()
     {
+        $goods = Goods::select("id as id", "name as name","price as price")->limit(5)->get();
+
         return view('order.create')->with(
             [
+                'goods' => $goods,
                 'back'=>"order.index"
             ]
         );
@@ -47,7 +51,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return dd($request->name);
     }
 
     /**
