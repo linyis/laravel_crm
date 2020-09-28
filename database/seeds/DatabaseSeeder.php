@@ -39,7 +39,14 @@ class DatabaseSeeder extends Seeder
             }
 
         });
+// 產品
+        factory(App\Orders\Goods::class,40)->create();
+        // factory(App\Orders\Goods::class)->create(10)->each(function ($good) {
 
+        // });
+
+
+// 類別
         $areaTree = [
             ['name' => '精華',
                 'children' => [

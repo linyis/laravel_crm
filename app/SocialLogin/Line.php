@@ -79,13 +79,6 @@ class Line implements Oauth
             "Authorization: Bearer " . $response['access_token']
         );
 
-        // $client = new Client();
-        // $response = $client->request('GET', $this->get_user_profile_url, [
-        //     'headers' => $headers
-        // ]);
-        // return json_decode($response->getBody()->getContents(), true);
-
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->get_user_profile_url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

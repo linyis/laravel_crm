@@ -6,6 +6,7 @@
 - 已實作 Test data seed, Account: test@test.com / 111111
 - 已實作 Test data seed, Data : test 帳號會有十筆資料 (app.php 已設定為中文測試資料)
 - 已實作 Register 中的第三方登錄 LINE 登錄, 其它 Google Facebook 待補
+- Line Call back 的網址是 http://localhost:8000/line/callback, 所以必須開在 port 8000
 - Line 登入後, 會記錄社群登入資料到 SocialUser 並且在 Users 建立資料做相關連結
 - 後台 Create New 可以上傳圖片, 並且縮圖到寬度 2048 以下
 - 後台 Edit 直接使用 Ajax 傳送想修改的資料

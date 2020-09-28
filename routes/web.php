@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-//use App\Category;
+use Illuminate\Support\Facades\DB;
+
 use App\Crm;
 use App\Category;
 
@@ -36,13 +37,7 @@ Route::get('/page', function()
 });
 Route::get('/test', function()
 {
-    $crm = Crm::find(29);
 
-    $categories = $crm->categories;
-
-    foreach($categories as $category) {
-        renderParent($category);
-    }
 });
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');
@@ -54,7 +49,6 @@ Route::get('/google', 'GoogleLoginController@page');
 Route::get('/google/callback', 'GoogleLoginController@LoginCallBack');
 Route::get('/google/sendcode', 'GoogleLoginController@sendcode');
 
-Route::get('/social/{provider}','SocialController@page');
 
 // Route::group(['prefix'=>'login/social','middleware'=>['guest']],function() {
 //     Route::get('{provider}/redirect', [

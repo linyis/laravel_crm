@@ -2,6 +2,7 @@
 
 use Faker\Generator as Faker;
 use App\User;
+use App\Orders\Order;
 use App\Crm;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,19 +35,10 @@ $factory->define(App\Crm::class, function (Faker $faker) {
 });
 
 
-// $factory->define(App\Category::class, function (Faker $faker) {
-//     return [
-//         ['name' => 'China',
-//             'children' => [
-//                 ['name' => 'Zhejiang',
-//                     'children' => [
-//                         ['name' => 'Ningbo'],
-//                         ['name' => 'Huzhou']
-//                     ]],
-//                 ['name' => 'Jiangsu']
-//             ]],
-//     ];
-// });
-
-
+$factory->define(App\Orders\Goods::class, function (Faker $faker) {
+    return [
+        'name' => $faker->title(4),
+        'price' => random_int(1,999)
+    ];
+});
 

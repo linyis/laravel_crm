@@ -794,13 +794,6 @@ class AioCapture extends Aio
 }
 
 
-
-
-
-
-
-
-
 Abstract class Verification
 {
     abstract function check_goods($arParameters = array());
