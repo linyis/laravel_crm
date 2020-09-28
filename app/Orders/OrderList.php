@@ -4,7 +4,7 @@ namespace App\Orders;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Order_list extends Model
+class OrderList extends Model
 {
     protected $table = 'order_lists';
 
@@ -13,6 +13,10 @@ class Order_list extends Model
     ];
 
     public function goods() {
-        $this->hasOne(Goods::class,'goods_id','id');
+        return $this->hasOne(Goods::class,'goods_id','id');
+    }
+
+    public function orders() {
+        return $this->belongsTo(Orders::class,'order_id','id');
     }
 }

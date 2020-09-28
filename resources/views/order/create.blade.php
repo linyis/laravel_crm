@@ -35,11 +35,12 @@
                     <label for="mobile" class="col-md-2 col-form-label text-md-right">商品 {{$loop->index+1}}</label>
 
                     <div class="col-md-4 col-form-label text-md-right">
+                    <input type="hidden" name="id[]" value="{{ $good->id }}" >
                     <input type="text" name="name[]" value="{{ $good->name }}" READONLY >
                     </div>
 
                     <div class="col-md-2 col-form-label text-md-right">
-                        <input type="text" name="quanity[]" value="1" READONLY >
+                        <input type="text" name="quantity[]" value="1" READONLY >
                     </div>
 
                     <div class="col-md-4 col-form-label text-md-right">

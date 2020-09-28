@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Crm;
 use App\Jobs\BrowserCount;
@@ -11,6 +12,8 @@ use App\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Common\ResizeImage;
 use App\Orders\Goods;
+use App\Orders\OrderList;
+use App\Orders\Order;
 
 class OrderController extends Controller
 {
@@ -51,7 +54,30 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        return dd($request->name);
+        $osn = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8); // 訂單編號
+
+        $order = new Order();
+        $order->order_no = $osn;
+        $order->email = $request->email;
+        $order->mobile = $request->mobile;
+        $order->payment = $request->total_price;
+        $order->payment_type= 1;
+        $order->status = 10;
+
+        DB::transaction(function () use ($order, $request) {
+            $order_id = $order->save();
+            for ($i=0;$i<count($request->name);$i++)
+            {
+                $orderitem = new OrderList();
+                $orderitem->order_id = $order_id;
+                $orderitem->goods_id = $request->id[$i];
+                $orderitem->quantity = $request->quantity[$i];
+                $orderitem->total_price = $request->price[$i] * $request->quantity[$i];
+                $orderitem->save();
+            }
+        }, 5);
+
+        return 'ok';
     }
 
     /**
