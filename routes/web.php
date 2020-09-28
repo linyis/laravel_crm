@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
 
 use App\Crm;
 use App\Category;
@@ -30,6 +31,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
 Route::resource('order', 'OrderController');
+Route::post('order/{id}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
+
 Route::get('/page', function()
 {
     return view('test');
@@ -37,7 +40,7 @@ Route::get('/page', function()
 });
 Route::get('/test', function()
 {
-
+    echo str_replace('-','/',now());
 });
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');

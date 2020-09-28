@@ -16,9 +16,9 @@ class Facebook implements Oauth
 
     public function __construct()
     {
-        $data = DB::table("social_keys")->where("name","=","FACEBOOK")->first();
-        $this->channel_id = $data->channel;
-        $this->secret = $data->key;
+        // $data = DB::table("social_keys")->where("name","=","FACEBOOK")->first();
+        // $this->channel_id = $data->channel;
+        // $this->secret = $data->key;
     }
 
     public function getLoginBaseUrl()
