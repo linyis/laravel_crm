@@ -15,6 +15,7 @@ use App\Common\ResizeImage;
 use App\Orders\Goods;
 use App\Orders\OrderList;
 use App\Orders\Order;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -92,7 +93,26 @@ class OrderController extends Controller
         // 9) 轉為全大寫後回傳
         return strtoupper($paramsString);
     }
+    public function test(Request $request) {
+//        return dd($request);
+        $szHtml =  '<!DOCTYPE html>';
+        $szHtml .= '<html>';
+        $szHtml .=     '<head>';
+        $szHtml .=         '<meta charset="utf-8">';
+        $szHtml .=     '</head>';
+        $szHtml .=     '<body>';
+        $szHtml .=         "<form id=\"__ecpayForm\" method=\"post\" target=\"_self\" action=\"http://localhost:8000/order/data\">";
+        $szHtml .=             "<input type=\"hidden\" name=\"CheckMacValue\" value=\"123\" />";
+        $szHtml .=         '</form>';
+        $szHtml .=         '<script type="text/javascript">document.getElementById("__ecpayForm").submit();</script>';
+        $szHtml .=     '</body>';
+        $szHtml .= '</html>';
+        echo $szHtml ;
+    }
+    public function data(Request $request) {
 
+
+    }
     public function store(Request $request)
     {
         $osn = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8); // 訂單編號
@@ -118,20 +138,7 @@ class OrderController extends Controller
                 $orderitem->total_price = $request->price[$i] * $request->quantity[$i];
                 $orderitem->save();
             }
-
-
         }, 5);
-
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5');
-        // curl_setopt_array($ch, array(
-        //     CURLOPT_POST => true,
-        //     CURLOPT_FOLLOWLOCATION => true,
-        //     CURLOPT_SSL_VERIFYPEER => true,
-        //     CURLOPT_AUTOREFERER => true,
-        //     CURLOPT_HEADER => false,
-        //     CURLOPT_RETURNTRANSFER => true,
-        // ));
 
         $dataAry = array(
             'MerchantID' => '2000132',
@@ -159,12 +166,6 @@ class OrderController extends Controller
             'BindingCard'       => 0
 
         );
-//        $dataAry['CheckMacValue'] = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
-//        return dd($dataAry);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($dataAry));
-        // $output = curl_exec($ch);
-        // curl_close($ch);
-        // return $output;
 
         //生成表單，自動送出
         $szCheckMacValue = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
@@ -190,22 +191,20 @@ class OrderController extends Controller
         echo $szHtml ;
 
     }
-    // 綠界 cehckout
-//    public function checkout(Request $request, Order $order)
+    // 綠界 訂單完成回應
     public function checkout(Request $request, Order $order)
     {
-
         $order->payment_type = 1;
         $order->status = 5;
-        $order->end_time = now();
+        $order->end_time = $request->input('TradeDate');
         $order->platform_time = now();
         $order->save();
         $order->payinfo()->create([
             'pay_platform' => 'ECPay',
-            'platform_number' => '',
-            'platform_status' => ''
+            'platform_number' => $request->input('MerchantTradeNo'),
+            'platform_status' => json_encode($request->toArray())
         ]);
-        print_r($request);
+        return redirect()->route('order.index')->with(['message'=>'訂單完成']);
     }
     /**
      * Display the specified resource.
@@ -213,9 +212,10 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $id)
     {
-        //
+
+//        return redirect()->route('order.index')->with(['message'=>'訂單完成']);
     }
 
     /**

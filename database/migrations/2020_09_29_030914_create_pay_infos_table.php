@@ -18,7 +18,7 @@ class CreatePayInfosTable extends Migration
             $table->integer('order_id')->default(null)->comment("訂單ID");
             $table->string('pay_platform')->default('ECPay')->comment("支付平台");
             $table->string('platform_number')->default(null)->comment("平台訂單號");
-            $table->string('platform_status')->default(null)->comment("支付狀態");
+            $table->text('platform_status')->default(null)->comment("支付狀態");
             $table->timestamps();
         });
     }

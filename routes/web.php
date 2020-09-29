@@ -31,18 +31,20 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
 Route::resource('order', 'OrderController');
-Route::post('order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
 
-// for test
-Route::get('order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
+Route::match(['get', 'post'], '/order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
+Route::match(['get', 'post'], '/order/data', 'Ordercontroller@data')->name('order.data');
 Route::get('/page', function()
 {
     return view('test');
 });
 Route::get('/test', function()
 {
+//    echo route('order.test');
     echo str_replace('-','/',now());
 });
+Route::get('/testform', 'OrderController@test')->name("order.test");
+
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');
 

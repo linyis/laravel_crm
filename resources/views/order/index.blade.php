@@ -24,7 +24,7 @@
                         <th scope="col">#</th>
                         <th scope="col">訂單編號</th>
                         <th scope="col">總價</th>
-                        <th scope="col">發文日期</th>
+                        <th scope="col">建立日期</th>
                     </tr>
                     </thead>
                     <tbody>
