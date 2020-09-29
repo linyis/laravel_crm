@@ -45,9 +45,12 @@ class HomeController extends Controller
         );
     }
     public function detail(Crm $crm) {
-
-        $this->dispatch(new BrowserCount($crm));
-        $this->dispatch(new BrowserLog());
+        BrowserCount::dispatch($crm);
+        BrowserLog::dispatch(array(
+            'ip'=> $_SERVER['REMOTE_ADDR'],
+            'ua' => $_SERVER['HTTP_USER_AGENT'],
+            'header' => $_SERVER['HTTP_ACCEPT']
+        ));
 
         return view('crms.detail')->with(
             [

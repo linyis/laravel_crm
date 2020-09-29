@@ -13,14 +13,17 @@ class BrowserLog implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 1;
+    public $timeout = 120;
+    protected $data = [];
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($ary)
     {
-
+        $this->data = $ary;
     }
 
     /**
@@ -31,9 +34,9 @@ class BrowserLog implements ShouldQueue
     public function handle()
     {
         $log = new Log;
-        $log->ip = $_SERVER['REMOTE_ADDR'];
-        $log->UA = $_SERVER['HTTP_USER_AGENT'];
-        $log->header = $_SERVER['HTTP_ACCEPT'];
+        $log->ip = $this->data['ip'];
+        $log->UA = $this->data['ua'];
+        $log->header = $this->data['header'];
         $log->save();
 
     }
