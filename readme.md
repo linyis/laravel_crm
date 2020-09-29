@@ -18,7 +18,10 @@
  
 ## 做了一半?
 
-- 綠界 API 還在串接
+- 綠界金流完成 Email send, 
+- 綠界金流完成 request data save..
+- 串接 data 封裝一下物件
+- DB diagram?
 
 ## 基本要求
 
