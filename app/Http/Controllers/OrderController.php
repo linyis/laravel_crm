@@ -103,18 +103,22 @@ class OrderController extends Controller
         $order->payment_type= 1;
         $order->status = 10;
         $order_id = null;
-        // DB::transaction(function () use ($order, $request) {
-        //     $order_id = $order->save();
-        //     for ($i=0;$i<count($request->name);$i++)
-        //     {
-        //         $orderitem = new OrderList();
-        //         $orderitem->order_id = $order_id;
-        //         $orderitem->goods_id = $request->id[$i];
-        //         $orderitem->quantity = $request->quantity[$i];
-        //         $orderitem->total_price = $request->price[$i] * $request->quantity[$i];
-        //         $orderitem->save();
-        //     }
-        // }, 5);
+        DB::transaction(function () use (&$order, $request) {
+
+            $order->save();
+
+            for ($i=0;$i<count($request->name);$i++)
+            {
+                $orderitem = new OrderList();
+                $orderitem->order_id = $order->id;
+                $orderitem->goods_id = $request->id[$i];
+                $orderitem->quantity = $request->quantity[$i];
+                $orderitem->total_price = $request->price[$i] * $request->quantity[$i];
+                $orderitem->save();
+            }
+
+
+        }, 5);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5');
@@ -125,35 +129,32 @@ class OrderController extends Controller
         curl_setopt($ch, CURLOPT_POST, true);
         $dataAry = array(
             'MerchantID' => '2000132',
-            'MerchantTradeNo' => 'ecPay1234',
+            'MerchantTradeNo' => 'ecPay1234'.str_random(10),
             'StoreID' => '00001', // not required
             'MerchantTradeDate' => date('Y/m/d H:i:s'),
             'PaymentType' => 'aio',
             'TotalAmount' => $request->total_price,
-            'TradeDesc' => 'ecpay 商城購物',
+            'TradeDesc' => urlencode('ecpay 商城購物'),
             'ItemName' => '手機 20 元 X2#隨身碟 60 元 X1',
-            'ReturnURL' => route("order.checkout",["id"=>$order_id]),
-            'NeedExtraPaidInfo'=>'Y',
+            'ReturnURL' => route("order.checkout",["id"=>$order->id]),
+            'NeedExtraPaidInfo'=>'N',
             'ChoosePayment' => 'Credit',
+            'EncryptType' => '1',
             'CheckMacValue' => '',
             "DeviceSource" => '',
             "IgnorePayment" => '',
             "PlatformID" => '',
-            'ClientBackURL' => route("order.index"),
-            'EncryptType' => '1',
             "CreditInstallment" => 0,
             "InstallmentAmount" => 0,
-            "Redeem"            => FALSE,
-            "UnionPay"          => FALSE,
+            "Redeem"            => 'Y',
+            "UnionPay"          => 0,
             "Language"          => '',
-            "PeriodAmount"      => '',
-            "PeriodType"        => '',
-            "Frequency"         => '',
-            "ExecTimes"         => '',
-            "PeriodReturnURL"   => ''
+            'InvoiceMark'       => 'N',
+            'BindingCard'       => 0
+
         );
         $dataAry['CheckMacValue'] = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
-    //    return dd($dataAry);
+//        return dd($dataAry);
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($dataAry));
         $output = curl_exec($ch);
@@ -162,9 +163,9 @@ class OrderController extends Controller
 
     }
     // 綠界 cehckout
-    public function checkout($id)
+    public function checkout(Request $request, $id)
     {
-        //
+        dd($request);
     }
     /**
      * Display the specified resource.
