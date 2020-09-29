@@ -31,12 +31,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('crm', 'CrmController');
 Route::resource('order', 'OrderController');
-Route::post('order/{id}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
+Route::post('order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
 
+// for test
+Route::get('order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
 Route::get('/page', function()
 {
     return view('test');
-
 });
 Route::get('/test', function()
 {

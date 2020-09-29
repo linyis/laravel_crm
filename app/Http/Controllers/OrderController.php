@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use App\User;
 use App\Crm;
 use App\Jobs\BrowserCount;
@@ -24,8 +25,9 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $orders = Order::where('status',5)->get();
         return view('order.index')->with([
-
+            'orders' => $orders
         ]);
     }
 
@@ -120,13 +122,17 @@ class OrderController extends Controller
 
         }, 5);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5');
-        curl_setopt_array($ch, array(
-            CURLOPT_HEADER => false,
-            CURLOPT_RETURNTRANSFER => true,
-        ));
-        curl_setopt($ch, CURLOPT_POST, true);
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5');
+        // curl_setopt_array($ch, array(
+        //     CURLOPT_POST => true,
+        //     CURLOPT_FOLLOWLOCATION => true,
+        //     CURLOPT_SSL_VERIFYPEER => true,
+        //     CURLOPT_AUTOREFERER => true,
+        //     CURLOPT_HEADER => false,
+        //     CURLOPT_RETURNTRANSFER => true,
+        // ));
+
         $dataAry = array(
             'MerchantID' => '2000132',
             'MerchantTradeNo' => 'ecPay1234'.str_random(10),
@@ -137,10 +143,10 @@ class OrderController extends Controller
             'TradeDesc' => urlencode('ecpay 商城購物'),
             'ItemName' => '手機 20 元 X2#隨身碟 60 元 X1',
             'ReturnURL' => route("order.checkout",["id"=>$order->id]),
+            'OrderResultURL' => route("order.checkout",["id"=>$order->id]),
             'NeedExtraPaidInfo'=>'N',
             'ChoosePayment' => 'Credit',
             'EncryptType' => '1',
-            'CheckMacValue' => '',
             "DeviceSource" => '',
             "IgnorePayment" => '',
             "PlatformID" => '',
@@ -153,19 +159,53 @@ class OrderController extends Controller
             'BindingCard'       => 0
 
         );
-        $dataAry['CheckMacValue'] = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
+//        $dataAry['CheckMacValue'] = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
 //        return dd($dataAry);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($dataAry));
+        // $output = curl_exec($ch);
+        // curl_close($ch);
+        // return $output;
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($dataAry));
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;
+        //生成表單，自動送出
+        $szCheckMacValue = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
+
+        $szHtml =  '<!DOCTYPE html>';
+        $szHtml .= '<html>';
+        $szHtml .=     '<head>';
+        $szHtml .=         '<meta charset="utf-8">';
+        $szHtml .=     '</head>';
+        $szHtml .=     '<body>';
+        $szHtml .=         "<form id=\"__ecpayForm\" method=\"post\" target=\"_self\" action=\"https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5\">";
+
+        foreach ($dataAry as $keys => $value) {
+            $szHtml .=         "<input type=\"hidden\" name=\"{$keys}\" value='{$value}' />";
+        }
+
+        $szHtml .=             "<input type=\"hidden\" name=\"CheckMacValue\" value=\"{$szCheckMacValue}\" />";
+        $szHtml .=         '</form>';
+        $szHtml .=         '<script type="text/javascript">document.getElementById("__ecpayForm").submit();</script>';
+        $szHtml .=     '</body>';
+        $szHtml .= '</html>';
+
+        echo $szHtml ;
 
     }
     // 綠界 cehckout
-    public function checkout(Request $request, $id)
+//    public function checkout(Request $request, Order $order)
+    public function checkout(Request $request, Order $order)
     {
-        dd($request);
+
+        $order->payment_type = 1;
+        $order->status = 5;
+        $order->end_time = now();
+        $order->platform_time = now();
+        $order->save();
+        $order->payinfo()->create([
+            'pay_platform' => 'ECPay',
+            'platform_number' => '',
+            'platform_status' => ''
+        ]);
+        print_r($request);
     }
     /**
      * Display the specified resource.
