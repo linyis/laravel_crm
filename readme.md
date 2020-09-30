@@ -21,6 +21,9 @@
 - 3.Mail Driver 改為 SES, 個人帳戶使用中
 - 3.訂單完成後發送Email, 放在 queue 中
 - ![image](https://github.com/linyis/laravel_crm/blob/master/TEST_CRM.png)
+
+<iframe width="560" height="315" src='https://dbdiagram.io/embed/5f7444953a78976d7b75cbbd'> </iframe>
+
 ## 剩下工作!!
 - 串接 data 封裝一下物件
 - DB diagram?
