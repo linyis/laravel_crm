@@ -12,6 +12,7 @@ use App\Jobs\BrowserLog;
 use App\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Common\ResizeImage;
+use App\Mail\ECPayOrderMail;
 use App\Orders\Goods;
 use App\Orders\OrderList;
 use App\Orders\Order;
@@ -204,6 +205,10 @@ class OrderController extends Controller
             'platform_number' => $request->input('MerchantTradeNo'),
             'platform_status' => json_encode($request->toArray())
         ]);
+    // 發送 email
+        Mail::to($order->email)->queue(new ECPayOrderMail($request->input('TradeDate'), $request->input('MerchantTradeNo'), $order->payment ));
+
+    // 導回主頁
         return redirect()->route('order.index')->with(['message'=>'訂單完成']);
     }
     /**
