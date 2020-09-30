@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestAmazonSes;
 use App\Mail\ECPayOrderMail;
 
 use App\Crm;
@@ -36,13 +35,7 @@ Route::resource('crm', 'CrmController');
 Route::resource('order', 'OrderController');
 
 Route::match(['get', 'post'], '/order/{order}/checkout', 'Ordercontroller@checkout')->name('order.checkout');
-Route::match(['get', 'post'], '/order/data', 'Ordercontroller@data')->name('order.data');
-Route::get('/testemail', function()
-{
-//    Mail::to('linyis@gmail.com')->queue(new ECPayOrderMail(null, null, 10 ));
-//    Mail::to('linyis@gmail.com')->send(new ECPayOrderMail(null, null, 10 ));
-//    Mail::to('linyis@gmail.com')->send(new TestAmazonSes('It works!'));
-});
+
 
 Route::get('/page', function()
 {
@@ -51,10 +44,11 @@ Route::get('/page', function()
 });
 Route::get('/test', function()
 {
+
 //    echo route('order.test');
-    echo str_replace('-','/',now());
+//    echo str_replace('-','/',now());
 });
-Route::get('/testform', 'OrderController@test')->name("order.test");
+
 
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');

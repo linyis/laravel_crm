@@ -6,17 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use App\User;
-use App\Crm;
-use App\Jobs\BrowserCount;
-use App\Jobs\BrowserLog;
 use App\Log;
-use Illuminate\Support\Facades\Validator;
-use App\Common\ResizeImage;
 use App\Mail\ECPayOrderMail;
 use App\Orders\Goods;
 use App\Orders\OrderList;
 use App\Orders\Order;
 use Illuminate\Support\Facades\Mail;
+use App\Orders\Common\FormMaker;
 
 class OrderController extends Controller
 {
@@ -94,30 +90,10 @@ class OrderController extends Controller
         // 9) 轉為全大寫後回傳
         return strtoupper($paramsString);
     }
-    public function test(Request $request) {
-//        return dd($request);
-        $szHtml =  '<!DOCTYPE html>';
-        $szHtml .= '<html>';
-        $szHtml .=     '<head>';
-        $szHtml .=         '<meta charset="utf-8">';
-        $szHtml .=     '</head>';
-        $szHtml .=     '<body>';
-        $szHtml .=         "<form id=\"__ecpayForm\" method=\"post\" target=\"_self\" action=\"http://localhost:8000/order/data\">";
-        $szHtml .=             "<input type=\"hidden\" name=\"CheckMacValue\" value=\"123\" />";
-        $szHtml .=         '</form>';
-        $szHtml .=         '<script type="text/javascript">document.getElementById("__ecpayForm").submit();</script>';
-        $szHtml .=     '</body>';
-        $szHtml .= '</html>';
-        echo $szHtml ;
-    }
-    public function data(Request $request) {
 
-
-    }
     public function store(Request $request)
     {
-        $osn = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8); // 訂單編號
-
+        $osn = FormMaker::orderId();
         $order = new Order();
         $order->order_no = $osn;
         $order->email = $request->email;
@@ -170,26 +146,12 @@ class OrderController extends Controller
 
         //生成表單，自動送出
         $szCheckMacValue = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
+        $dataAry['CheckMacValue'] = $szCheckMacValue;
 
-        $szHtml =  '<!DOCTYPE html>';
-        $szHtml .= '<html>';
-        $szHtml .=     '<head>';
-        $szHtml .=         '<meta charset="utf-8">';
-        $szHtml .=     '</head>';
-        $szHtml .=     '<body>';
-        $szHtml .=         "<form id=\"__ecpayForm\" method=\"post\" target=\"_self\" action=\"https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5\">";
+        FormMaker::make('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5', $dataAry);
 
-        foreach ($dataAry as $keys => $value) {
-            $szHtml .=         "<input type=\"hidden\" name=\"{$keys}\" value='{$value}' />";
-        }
 
-        $szHtml .=             "<input type=\"hidden\" name=\"CheckMacValue\" value=\"{$szCheckMacValue}\" />";
-        $szHtml .=         '</form>';
-        $szHtml .=         '<script type="text/javascript">document.getElementById("__ecpayForm").submit();</script>';
-        $szHtml .=     '</body>';
-        $szHtml .= '</html>';
 
-        echo $szHtml ;
 
     }
     // 綠界 訂單完成回應

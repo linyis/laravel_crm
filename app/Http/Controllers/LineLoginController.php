@@ -37,12 +37,11 @@ class LineLoginController extends Controller
             if ($error) {
                 throw new Exception($request->all());
             }
-//            $code = $request->input('code', '');
+//  權杖
+            $code = $request->input('code', '');
 
-
-            $response = $this->service->getLineToken($request->input('code', ''));
+            $response = $this->service->getLineToken($code);
             $user_profile = $this->service->getUserProfile($response);
-
 
 //  處理 Login 及帳號新增
             $login_user = null;
@@ -89,13 +88,8 @@ class LineLoginController extends Controller
             }
 
 
-            // if (!is_null($login_user))
-            // {
-            //     Auth::login($login_user);
-            //     return redirect()->action('${CrmController@index}', ['parameterKey' => 'value']);
-            // }
             print_r($user_profile);
-            //echo "<pre>"; print_r($user_profile); echo "</pre>";
+
 
         } catch (Exception $ex) {
             echo $ex->getMessage();

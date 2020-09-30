@@ -15,8 +15,11 @@ class CreateOrderListsTable extends Migration
     {
         Schema::create('order_lists', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order_id')->default(null)->comment("訂單id");
-            $table->integer('goods_id')->default(null)->comment("商品id");
+            $table->unsignedInteger('order_id')->default(null)->comment("訂單id");
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->unsignedInteger('goods_id')->default(null)->comment("商品id");
+//            $table->foreign('goods_id')->references('id')->on('goods');
+
             $table->integer('quantity')->default(null)->comment("數量");
             $table->decimal('total_price')->default(null)->comment("總價");
             $table->timestamps();
