@@ -44,11 +44,13 @@ Route::get('/page', function()
 });
 Route::get('/test', function()
 {
-
+    echo env('QUEUE_DRIVER', 'redis');
 //    echo route('order.test');
 //    echo str_replace('-','/',now());
 });
-
+Route::get('/testemail/{email?}',function($email = null) {
+    Mail::to($email ?? 'linyis@gmail.com')->queue(new ECPayOrderMail(null, null, 100 ));
+});
 
 Route::get('/line', 'LineLoginController@page');
 Route::get('/line/callback', 'LineLoginController@LoginCallBack');
@@ -59,26 +61,3 @@ Route::get('/facebook/callback', 'FacebookLoginController@LoginCallBack');
 Route::get('/google', 'GoogleLoginController@page');
 Route::get('/google/callback', 'GoogleLoginController@LoginCallBack');
 Route::get('/google/sendcode', 'GoogleLoginController@sendcode');
-
-
-// Route::group(['prefix'=>'login/social','middleware'=>['guest']],function() {
-//     Route::get('{provider}/redirect', [
-//         'as'=>'social.redirect',
-//         'user' => 'SocialController@getSocialRedirect'
-
-//     ]);
-//     Route::get('{provider}/callback',[
-//         'as'=>'social.handel'
-//     ]);
-
-// });
-
-
-function renderParent($node) {
-
-    echo "<b>{$node->name}</b>";
-    if ($node->parent) {
-       echo "<-";
-       renderParent($node->parent);
-    }
-}

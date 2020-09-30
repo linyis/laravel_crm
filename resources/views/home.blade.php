@@ -53,3 +53,14 @@
 </div>
 @endsection
 
+@php
+function renderParent($node) {
+
+    echo "<b>{$node->name}</b>";
+    if ($node->parent) {
+        echo "<-";
+        renderParent($node->parent);
+    }
+}
+@endphp
+

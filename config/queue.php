@@ -14,8 +14,8 @@ return [
     |
     */
 
-    //'default' => env('QUEUE_DRIVER', 'redis'),
-    'default' => 'database',
+    'default' => env('QUEUE_DRIVER', 'redis'),
+ //   'default' => 'database',
 
     /*
     |--------------------------------------------------------------------------

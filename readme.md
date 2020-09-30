@@ -1,28 +1,31 @@
 ## About 本專案
 
+- 0.Diagram = TEST_CRM.png
 - 1.前台 List 有實作 search 文字
 - 1.已實作 php artisan user:create {email} {passwd:optional} {name:optional}
 - 1.已實作 Test data seed, Account: test@test.com / 111111
 - 1.已實作 Test data seed, Data : test 帳號會有十筆資料 (app.php 已設定為中文測試資料)
 - 1.已實作 Register 中的第三方登錄 LINE 登錄, 其它 Google Facebook 待補
 - 1.Line Developer 中 Call back 的網址是 http://localhost:8000/line/callback, 所以必須開在 port 8000
+- 1.QUEUE Driver 現在為 redis, 測試自行 compiler redis(github win32 source code) 成功執行 server
 - 1.Line 登入後, 會記錄社群登入資料到 SocialUser 並且在 Users 建立資料做相關連結
 - 2.後台 Create New 可以上傳圖片, 並且縮圖到寬度 2048 以下
 - 2.後台 Edit 直接使用 Ajax 傳送想修改的資料
 - 2.後台 Delete 是使用 web route 傳送 id 處理後再 redirect 回 list
 - 2.後台有實作 baum/baum on category model, 已自動建立五筆類別資料在 seed
 - 2.資料隨機綁定不同的 category, 也有可能沒有
-- 2.後台有顯示階層, web.php 有個遞迴, 用來給後台顯示類別階層的
+- 2.後台有顯示階層, home.blade.php 有個遞迴, 用來給顯示類別階層的
 - 2.瀏覽記錄及 IP 記錄有實作 Queue Job 機制
 - 3.VerifyCsrfToken, 記錄一些訂單 callback 回來時避免掉csrf的網址
 - 3.訂單資料庫已完成, Create & Store 已完成
 - 3.訂單 Api 串接完成, 自動更新 Order 資料庫, PayInfo 資料庫
 - 3.訂單 Log 記錄會放在 PayInfo (column:platform_status)
-- 3.Mail Driver 改為 SES, 個人帳戶使用中
-- 3.訂單完成後發送Email, 放在 queue 中
+- 3.Mail Driver 改為 SES, 個人帳戶使用中, 一天限制 200 封
+- 3.(route) /testemail/{email?} , 可以直接測試 email (queue:work 要開), 預設值寄給我本人
+- 3.訂單完成後發送Email, 放在 Queue 中
 
 ## 剩下工作!!
-- 串接 data 封裝一下物件
+- 封裝綠界 API 彈性化
 
 ## 基本要求
 
