@@ -14,12 +14,12 @@
 - 2.資料隨機綁定不同的 category, 也有可能沒有
 - 2.後台有顯示階層, web.php 有個遞迴, 用來給後台顯示類別階層的
 - 2.瀏覽記錄及 IP 記錄有實作 Queue Job 機制
-- 3.訂單資料庫已完成, Create & Store 已完成, 還未完成 api 串接和 log 記錄
+- 3.訂單資料庫已完成, Create & Store 已完成
+- 3.訂單 Api 串接完成, 自動更新 Order 資料庫, PayInfo 資料庫
+- 3.訂單 Log 記錄會放在 PayInfo (column:platform_status)
+- 3.訂單完成後發送Email經由SES服務to:表單的Email, 放在 queue 中
  
-## 做了一半?
-
-- 綠界金流完成 Email send, 
-- 綠界金流完成 request data save..
+## 剩下工作!!
 - 串接 data 封裝一下物件
 - DB diagram?
 
