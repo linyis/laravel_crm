@@ -20,7 +20,6 @@
 - 3.訂單 Log 記錄會放在 PayInfo (column:platform_status)
 - 3.Mail Driver 改為 SES, 個人帳戶使用中
 - 3.訂單完成後發送Email, 放在 queue 中
-- 
 
 ## 剩下工作!!
 - 串接 data 封裝一下物件
@@ -32,6 +31,7 @@
 - 請使 Laravel MVC 架構
 - 請使 bootstrap 套版
 - 資料庫規劃請 https://dbdiagram.io/ 具畫出 DB diagram
+- ![image](https://github.com/linyis/laravel_crm/blob/master/TEST_CRM.png)
 - 陣列請盡量使 Collection 處理
 
 ## 會員登入/註冊系統
