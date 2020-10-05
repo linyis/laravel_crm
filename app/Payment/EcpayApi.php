@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Mail;
 class EcpayApi implements ThirdPartApi
 {
     private $providerName = "ECPay";
+    private $url = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5'; // 測試用
+    private $hashKey = '5294y06JbISpM5x9';
+    private $hashIV = 'v77hoKGq4kWxNNIS';
 
     public function checkOut($request) {
 
@@ -67,9 +70,9 @@ class EcpayApi implements ThirdPartApi
         );
 
 
-        $szCheckMacValue = CheckMacValue::generate($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
+        $szCheckMacValue = CheckMacValue::generate($dataAry, $this->hashKey, $this->haskIV);
         $dataAry['CheckMacValue'] = $szCheckMacValue;
-        FormMaker::make('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5', $dataAry);
+        FormMaker::make($this->url, $dataAry);
     }
 
     private function itemMerge(&$request)
