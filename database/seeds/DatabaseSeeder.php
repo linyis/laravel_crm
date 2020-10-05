@@ -68,6 +68,15 @@ class DatabaseSeeder extends Seeder
             "key"=>"1f7cbab35d61178e6278c092f3edd84e"
             ]
         );
+//  Insert Facebook Key
+        SocialKey::insert([
+            "name"=>"FACEBOOK",
+            "channel"=>"609372459251895",
+            "key"=>"1f7cbab35d61178e6278c092f3edd84e"
+            ]
+        );
+
+
         for ($i=0;$i<34;$i++) {
             $cat = random_int(1,5);
             $crms = random_int(1,33);

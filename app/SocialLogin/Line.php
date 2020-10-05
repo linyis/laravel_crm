@@ -13,6 +13,7 @@ class Line implements Oauth
 
     private $channel_id;
     private $secret;
+    private $providerName;
     private $authorize_base_url = 'https://access.line.me/oauth2/v2.1/authorize';
     private $get_token_url = 'https://api.line.me/oauth2/v2.1/token';
     private $get_user_profile_url = 'https://api.line.me/v2/profile';
@@ -20,7 +21,8 @@ class Line implements Oauth
 
     public function __construct()
     {
-        $data = DB::table("social_keys")->where("name","=","LINE")->first();
+        $this->providerName = "LINE";
+        $data = DB::table("social_keys")->where("name","=",$this->providerName)->first();
         $this->channel_id = $data->channel;
         $this->secret = $data->key;
     }
@@ -110,6 +112,48 @@ class Line implements Oauth
 
         return $userProfile;
 
+    }
+
+    /**
+     * 處理 Login 及帳號新增
+     */
+    public function loginUser($email, $userId='', $displayName='') {
+        $login_user = null;
+        $user = User::where("email","=",$email)->where('provider','=',$this->providerName)->first();
+        if (!is_null($user)) {
+            if ($user->count()>0){
+                $login_user = $user;
+            } else {
+                $new_user = new User();
+                $new_user->email = $email;
+                $new_user->name = $displayName;
+                $new_user->password = Hash::make(str_random(8));
+                $new_user->provider = $this->providerName;
+                $new_user->save();
+                $new_SocialUser = new SocialUser();
+                $new_SocialUser->user_id = $new_user->id;
+                $new_SocialUser->provider_user_id = $userId;
+                $new_SocialUser->provider = $this->providerName;
+                $new_SocialUser->save();
+                return $new_user;
+
+            }
+        } else {
+            $new_user = new User();
+            $new_user->email = $email;
+            $new_user->name = $displayName;
+            $new_user->password = Hash::make(str_random(8));
+            $new_user->provider = $this->providerName;
+            $new_user->save();
+            $new_SocialUser = new SocialUser();
+            $new_SocialUser->user_id = $new_user->id;
+            $new_SocialUser->provider_user_id = $userId;
+            $new_SocialUser->provider = $this->providerName;
+            $new_SocialUser->save();
+            return $new_user;
+        }
+
+        return $login_user;
     }
 }
 

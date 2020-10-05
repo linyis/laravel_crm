@@ -10,26 +10,28 @@ class Facebook implements Oauth
 
     private $channel_id;
     private $secret;
+    private $providerName;
     private $authorize_base_url = 'https://www.facebook.com/v8.0/dialog/oauth';
     private $get_token_url = 'https://graph.facebook.com/v8.0/oauth/access_token';
     private $get_user_profile_url = 'https://api.line.me/v2/profile';
 
     public function __construct()
     {
-        // $data = DB::table("social_keys")->where("name","=","FACEBOOK")->first();
-        // $this->channel_id = $data->channel;
-        // $this->secret = $data->key;
+        $this->providerName = "FACEBOOK";
+        $data = DB::table("social_keys")->where("name","=",$this->providerName)->first();
+        $this->channel_id = $data->channel;
+        $this->secret = $data->key;
     }
 
     public function getLoginBaseUrl()
     {
         // 組成 Line Login Url
         $url = $this->authorize_base_url.'?';
-//        $url .= 'response_type=code';
-        $url .= '&client_id=' . $this->channel_id;
+        $url .= 'response_type=code';
+        $url .= '&client_id=' . $this->channel_id.'';
         $url .= '&redirect_uri=' . config('app.url') . ':8000/facebook/callback';
         $url .= '&state=test'; // 暫時固定
-//        $url .= '&scope=openid%20profile';
+        $url .= '&scope=email';
 
         return $url;
     }
@@ -89,6 +91,10 @@ class Facebook implements Oauth
         curl_close($ch);
 
         return json_decode($output);
+
+    }
+
+    public function loginUser($email, $userId='', $displayName='') {
 
     }
 }

@@ -23,6 +23,7 @@ class FacebookLoginController extends Controller
     {
 
         $url = $this->service->getLoginBaseUrl();
+        return $url;
         return redirect($url);
     }
 

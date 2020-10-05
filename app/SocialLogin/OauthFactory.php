@@ -22,4 +22,8 @@ class OauthFactory
     public function getUserProfile($token){
         return $this->current->getUserProfile($token);
     }
+
+    public function loginUser($email, $userId='', $displayName=''){
+        return $this->current->loginUser($email, $userId, $displayName);
+    }
 }

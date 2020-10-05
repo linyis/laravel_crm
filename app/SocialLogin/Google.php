@@ -8,6 +8,20 @@ use Google_Client;
 
 class Google implements Oauth
 {
+    private $channel_id;
+    private $secret;
+    private $providerName;
+    private $authorize_base_url = 'https://www.facebook.com/v8.0/dialog/oauth';
+    private $get_token_url = 'https://graph.facebook.com/v8.0/oauth/access_token';
+    private $get_user_profile_url = 'https://api.line.me/v2/profile';
+
+    public function __construct()
+    {
+        $this->providerName = "GOOGLE";
+        $data = DB::table("social_keys")->where("name","=",$this->providerName)->first();
+        $this->channel_id = $data->channel;
+        $this->secret = $data->key;
+    }
 
     public function getLoginBaseUrl()
     {
@@ -55,6 +69,10 @@ class Google implements Oauth
     public function getAccess()
     {
 
+
+    }
+
+    public function loginUser($email, $userId='', $displayName='') {
 
     }
 
