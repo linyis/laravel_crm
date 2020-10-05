@@ -20,7 +20,7 @@ class LineLoginController extends Controller
 
     public function __construct()
     {
-         $this->service = new OauthFactory(new Line());
+         $this->service = OauthFactory::makeOauth('LINE');
     }
 
     public function page()

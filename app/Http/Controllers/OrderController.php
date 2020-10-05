@@ -15,6 +15,7 @@ use App\Payment\CheckMacValue;
 use Illuminate\Support\Facades\Mail;
 use App\Orders\Common\FormMaker;
 use App\Payment\EcpayApi;
+use App\Payment\ThirdPartApiFactory;
 
 class OrderController extends Controller
 {
@@ -26,7 +27,7 @@ class OrderController extends Controller
 
     public function __construct()
     {
-         $this->paymentApi = new EcpayApi();
+         $this->paymentApi = ThirdPartApiFactory::makeApi('ECPay');
     }
 
     /**
@@ -69,7 +70,6 @@ class OrderController extends Controller
     {
         // 檢查 $request
         $this->paymentApi->checkOut($request);
-
     }
     /**
      * 綠界 訂單完成回應

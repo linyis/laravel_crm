@@ -48,7 +48,7 @@ class EcpayApi implements ThirdPartApi
             'PaymentType' => 'aio',
             'TotalAmount' => $request->total_price,
             'TradeDesc' => urlencode('ecpay 商城購物'),
-            'ItemName' => '手機 20 元 X2#隨身碟 60 元 X1',
+            'ItemName' => $this->itemMerge($request),
             'ReturnURL' => route("order.checkout",["id"=>$order->id]),
             'OrderResultURL' => route("order.checkout",["id"=>$order->id]),
             'NeedExtraPaidInfo'=>'N',
@@ -72,7 +72,25 @@ class EcpayApi implements ThirdPartApi
         FormMaker::make('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5', $dataAry);
     }
 
-     public function orderComplete($request, $order) {
+    private function itemMerge(&$request)
+    {
+        $str = "";
+        $size = count($request->name);
+        for ($i=0;$i<$size;$i++) {
+            $str .= $request->name[$i];
+            $str .= " ";
+            $str .= $request->price[$i];
+            $str .= " ";
+            $str .= "元";
+            $str .= "X";
+            $str .= $request->quantity[$i];
+            if ($i!=$size-1)
+                $str .= "#";
+        }
+        return $str;
+    }
+
+    public function orderComplete($request, $order) {
         $order->payment_type = 1;
         $order->status = 5;
         $order->end_time = $request->input('TradeDate');
