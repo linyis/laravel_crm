@@ -2,7 +2,7 @@
 
 - 0.Diagram = TEST_CRM.png
 - 1.前台 List 有實作 search 文字
-- 1.已實作 php artisan user:create {email} {passwd:optional} {name:optional}
+- 1.已實作 Console, php artisan user:create {email} {passwd:optional} {name:optional}
 - 1.已實作 Test data seed, Account: test@test.com / 111111
 - 1.已實作 Test data seed, Data : test 帳號會有十筆資料 (app.php 已設定為中文測試資料)
 - 1.已實作 Register 中的第三方登錄 LINE 登錄, 其它 Google Facebook 待補
@@ -23,9 +23,11 @@
 - 3.Mail Driver 改為 SES, 個人帳戶使用中, 一天限制 200 封
 - 3.(route) /testemail/{email?} , 可以直接測試 email (queue:work 要開), 預設值寄給我本人
 - 3.訂單完成後發送Email, 放在 Queue 中
+- 3.做一個ThirdPartApi介面包裝一下表單傳送, 實作 EcpayApi 的表單傳送
+- 3.ThirdPartApi mark 掉 callBack 功能, 不打算將邏輯包裝進入  變化還無法掌握 
 
 ## 剩下工作!!
-- 封裝綠界 API 彈性化
+- Facebook, Google 登入...暫時無法完成
 
 ## 基本要求
 
@@ -60,7 +62,6 @@
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>

@@ -7,61 +7,47 @@ namespace App\Payment;
 */
 class CheckMacValue {
 
-    static function generate($arParameters = array(),$HashKey = '' ,$HashIV = '',$encType = 0){
-        $sMacValue = '' ;
+    static function generate(array $params, $hashKey='', $hashIV='', $encType = 1){
+    // 0) 如果資料中有 null，必需轉成空字串
+        $params = array_map('strval', $params);
 
-        if(isset($arParameters))
-        {
-            unset($arParameters['CheckMacValue']);
-            // 資料排序 php 5.3以下不支援
-            uksort($arParameters, array('CheckMacValue','merchantSort'));
+        // 1) 如果資料中有 CheckMacValue 必需先移除
+        unset($params['CheckMacValue']);
 
-            // 組合字串
-            $sMacValue = 'HashKey=' . $HashKey ;
-            foreach($arParameters as $key => $value)
-            {
-                $sMacValue .= '&' . $key . '=' . $value ;
-            }
+        // 2) 將鍵值由 A-Z 排序
+        uksort($params, 'strcasecmp');
 
-            $sMacValue .= '&HashIV=' . $HashIV ;
+        // 3) 將陣列轉為 query 字串
+        $paramsString = urldecode(http_build_query($params));
 
-            // URL Encode編碼
-            $sMacValue = urlencode($sMacValue);
+        // 4) 最前方加入 HashKey，最後方加入 HashIV
+        $paramsString = "HashKey={$hashKey}&{$paramsString}&HashIV={$hashIV}";
 
-            // 轉成小寫
-            $sMacValue = strtolower($sMacValue);
+        // 5) 做 URLEncode
+        $paramsString = urlencode($paramsString);
 
-            // 取代為與 dotNet 相符的字元
-            $sMacValue = str_replace('%2d', '-', $sMacValue);
-            $sMacValue = str_replace('%5f', '_', $sMacValue);
-            $sMacValue = str_replace('%2e', '.', $sMacValue);
-            $sMacValue = str_replace('%21', '!', $sMacValue);
-            $sMacValue = str_replace('%2a', '*', $sMacValue);
-            $sMacValue = str_replace('%28', '(', $sMacValue);
-            $sMacValue = str_replace('%29', ')', $sMacValue);
+        // 6) 轉為全小寫
+        $paramsString = strtolower($paramsString);
 
-            // 編碼
-            switch ($encType) {
-                case EncryptType::ENC_SHA256:
-                    // SHA256 編碼
-                    $sMacValue = hash('sha256', $sMacValue);
-                break;
+        // 7) 轉換特定字元
+        $paramsString = str_replace('%2d', '-', $paramsString);
+        $paramsString = str_replace('%5f', '_', $paramsString);
+        $paramsString = str_replace('%2e', '.', $paramsString);
+        $paramsString = str_replace('%21', '!', $paramsString);
+        $paramsString = str_replace('%2a', '*', $paramsString);
+        $paramsString = str_replace('%28', '(', $paramsString);
+        $paramsString = str_replace('%29', ')', $paramsString);
 
-                case EncryptType::ENC_MD5:
-                default:
-                // MD5 編碼
-                    $sMacValue = md5($sMacValue);
-            }
+        // 8) 進行編碼
+        $paramsString = $encType ? hash('sha256', $paramsString) : md5($paramsString);
 
-                $sMacValue = strtoupper($sMacValue);
-        }
-
-        return $sMacValue ;
+        // 9) 轉為全大寫後回傳
+        return strtoupper($paramsString);
     }
     /**
     * 自訂排序使用
     */
-    private static function merchantSort($a,$b)
+    private static function strcasecmp($a,$b)
     {
         return strcasecmp($a, $b);
     }

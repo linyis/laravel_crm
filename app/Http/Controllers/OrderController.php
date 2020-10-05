@@ -11,11 +11,24 @@ use App\Mail\ECPayOrderMail;
 use App\Orders\Goods;
 use App\Orders\OrderList;
 use App\Orders\Order;
+use App\Payment\CheckMacValue;
 use Illuminate\Support\Facades\Mail;
 use App\Orders\Common\FormMaker;
+use App\Payment\EcpayApi;
 
 class OrderController extends Controller
 {
+    /**
+     * 訂單預設的使用第三方支付 Api
+     *
+     */
+    protected $paymentApi;
+
+    public function __construct()
+    {
+         $this->paymentApi = new EcpayApi();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -52,47 +65,9 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    function ecpayCheckMacValue(array $params, $hashKey='', $hashIV='', $encType = 1)
-    {
-    // 0) 如果資料中有 null，必需轉成空字串
-        $params = array_map('strval', $params);
-
-        // 1) 如果資料中有 CheckMacValue 必需先移除
-        unset($params['CheckMacValue']);
-
-        // 2) 將鍵值由 A-Z 排序
-        uksort($params, 'strcasecmp');
-
-        // 3) 將陣列轉為 query 字串
-        $paramsString = urldecode(http_build_query($params));
-
-        // 4) 最前方加入 HashKey，最後方加入 HashIV
-        $paramsString = "HashKey={$hashKey}&{$paramsString}&HashIV={$hashIV}";
-
-        // 5) 做 URLEncode
-        $paramsString = urlencode($paramsString);
-
-        // 6) 轉為全小寫
-        $paramsString = strtolower($paramsString);
-
-        // 7) 轉換特定字元
-        $paramsString = str_replace('%2d', '-', $paramsString);
-        $paramsString = str_replace('%5f', '_', $paramsString);
-        $paramsString = str_replace('%2e', '.', $paramsString);
-        $paramsString = str_replace('%21', '!', $paramsString);
-        $paramsString = str_replace('%2a', '*', $paramsString);
-        $paramsString = str_replace('%28', '(', $paramsString);
-        $paramsString = str_replace('%29', ')', $paramsString);
-
-        // 8) 進行編碼
-        $paramsString = $encType ? hash('sha256', $paramsString) : md5($paramsString);
-
-        // 9) 轉為全大寫後回傳
-        return strtoupper($paramsString);
-    }
-
     public function store(Request $request)
     {
+
         $osn = FormMaker::orderId();
         $order = new Order();
         $order->order_no = $osn;
@@ -103,7 +78,7 @@ class OrderController extends Controller
         $order->status = 10;
         $order_id = null;
         DB::transaction(function () use (&$order, $request) {
-
+//  儲存訂單資料 + 訂單詳細內容清單
             $order->save();
 
             for ($i=0;$i<count($request->name);$i++)
@@ -116,7 +91,7 @@ class OrderController extends Controller
                 $orderitem->save();
             }
         }, 5);
-
+//  建立綠界基本 API 串接資料
         $dataAry = array(
             'MerchantID' => '2000132',
             'MerchantTradeNo' => 'ecPay1234'.str_random(10),
@@ -141,22 +116,16 @@ class OrderController extends Controller
             "Language"          => '',
             'InvoiceMark'       => 'N',
             'BindingCard'       => 0
-
         );
 
-        //生成表單，自動送出
-        $szCheckMacValue = $this->ecpayCheckMacValue($dataAry,'5294y06JbISpM5x9','v77hoKGq4kWxNNIS');
-        $dataAry['CheckMacValue'] = $szCheckMacValue;
-
-        FormMaker::make('https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5', $dataAry);
-
-
-
+        $this->paymentApi->checkOut($dataAry);
 
     }
     // 綠界 訂單完成回應
     public function checkout(Request $request, Order $order)
     {
+ //       $this->paymentApi->callBack($request, $order);
+
         $order->payment_type = 1;
         $order->status = 5;
         $order->end_time = $request->input('TradeDate');
