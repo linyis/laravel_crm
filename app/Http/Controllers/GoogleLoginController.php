@@ -15,7 +15,7 @@ class GoogleLoginController extends Controller
 
     public function __construct()
     {
-        $this->service = new OauthFactory(new Google());
+        $this->service = OauthFactory::makeOauth('GOOGLE');
     }
 
     public function page()

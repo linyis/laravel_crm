@@ -16,14 +16,12 @@ class FacebookLoginController extends Controller
 
     public function __construct()
     {
-         $this->service = new OauthFactory(new Facebook());
+        $this->service = OauthFactory::makeOauth('FACEBOOK');
     }
 
     public function page()
     {
-
         $url = $this->service->getLoginBaseUrl();
-        return $url;
         return redirect($url);
     }
 
