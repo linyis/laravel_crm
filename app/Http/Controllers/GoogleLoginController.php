@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\SocialLogin\Google;
 use App\SocialLogin\OauthFactory;
-
 use Google_client;
 
 class GoogleLoginController extends Controller

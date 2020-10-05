@@ -16,7 +16,7 @@ class OauthFactory
         return $this->current->getLoginBaseUrl();
     }
 
-    public function getLineToken($code) {
+    public function getToken($code) {
         return $this->current->getToken($code);
     }
     public function getUserProfile($token){

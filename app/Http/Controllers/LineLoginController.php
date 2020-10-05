@@ -39,23 +39,20 @@ class LineLoginController extends Controller
             }
 //  權杖
             $code = $request->input('code', '');
-
-            $response = $this->service->getLineToken($code);
-            $user_profile = $this->service->getUserProfile($response);
+            $response = $this->service->getToken($code);
+            $userProfile = $this->service->getUserProfile($response);
 
 //  處理 Login 及帳號新增
+            $loginUser = $this->service->loginUser($userProfile->email, $userProfile->userId, $userProfile->displayName);
 
-
-            $login_user = $this->service->loginUser($user_profile->email, $user_profile->userId, $user_profile->displayName);
-
-
-            if (!is_null($login_user)) {
-                Auth::loginUsingId($login_user->id);
+//  重導登入使用者
+            if (!is_null($loginUser)) {
+                Auth::loginUsingId($loginUser->id);
                 return redirect("crm");
             }
 
 
-            print_r($user_profile);
+            print_r($userProfile);
 
 
         } catch (Exception $ex) {

@@ -37,12 +37,10 @@ class FacebookLoginController extends Controller
             }
 
             $code = $request->input('code', '');
+            $response = $this->service->getToken($code);
+            $userProfile = $this->service->getUserProfile($response['access_token']);
 
-            $response = $this->service->getLineToken($code);
-
-            $user_profile = $this->service->getUserProfile($response['access_token']);
-
-            echo "<pre>"; print_r($user_profile); echo "</pre>";
+            echo "<pre>"; print_r($userProfile); echo "</pre>";
         } catch (Exception $ex) {
 
             echo $ex->getMessage();
